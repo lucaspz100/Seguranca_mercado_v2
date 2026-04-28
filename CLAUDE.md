@@ -99,15 +99,15 @@ sinc/
   - `POST /api/v1/auth/login` — JWT HS256, senha Argon2id, refresh token no Redis.
   - `POST /api/v1/auth/refresh` — rotação de refresh token.
   - `POST /api/v1/auth/logout` — revogação do refresh token.
-- CLI: `python -m sinc.cli create-admin --email ... --username ... --password ...`
-- 8 testes passando (`pytest tests/ -v`), com SQLite in-memory + httpx.AsyncClient.
+- CLI: `python -m sinc.cli --email ... --username ... --password ...` (Typer app de um único comando — não usar `create-admin` como subcomando)
+- 18 testes passando (`pytest tests/ -v`), com SQLite in-memory + httpx.AsyncClient.
+- Endpoints de usuários: `GET /api/v1/users` (MANAGER+), `POST /api/v1/users` (ADMIN), `PATCH /api/v1/users/{id}/deactivate` (ADMIN).
 
 **Pendente antes de avançar para Fase 1:**
 
-- [ ] Validação manual do fluxo refresh/logout com Docker + Postgres real (Docker não estava ativo durante o desenvolvimento).
+- [x] Validação manual com Docker: migration, auth flow completo (login → refresh com rotação → rejeição token antigo → logout → rejeição pós-logout), tudo OK com Postgres + Redis reais.
 - [ ] ADR-009: decidir login por email vs. username após reunião com os operadores do Kan.
-- [x] Endpoints de gerenciamento de usuários: `GET /api/v1/users` (MANAGER+), `POST /api/v1/users` (ADMIN), `PATCH /api/v1/users/{id}/deactivate` (ADMIN). 10 testes cobrindo RBAC e casos de erro.
-- [ ] Passo 6: smoke test de YOLO + ArcFace em vídeo gravado de bancada — requer `scripts/download_models.sh` e GPU/CPU adequada.
+- [ ] Passo 6: smoke test de YOLO + ArcFace — scripts prontos (`scripts/download_models.sh` e `scripts/smoke_test.py`); requer vídeo de bancada e rodar `download_models.sh` primeiro.
 - [ ] **Aguardando reunião com Kan** para destravar Fase 1 (especificações de servidor, lista de câmeras, watchlist real).
 
 ## Documentos de referência

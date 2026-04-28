@@ -1,0 +1,20 @@
+{
+  "video": "tests/fixtures/videos/me_entering.mp4",
+  "resolution": "1920x1080",
+  "fps": 15.0001722178211,
+  "frames_processed": 300,
+  "yolo": {
+    "total_detections": 1333,
+    "frames_with_person": 300,
+    "avg_latency_ms": 26.12
+  },
+  "yunet": {
+    "total_faces": 487,
+    "frames_with_face": 238,
+    "avg_latency_ms": 85.42
+  },
+  "arcface": {
+    "embeddings_generated": 13,
+    "avg_latency_ms": 70.66
+  }
+}
