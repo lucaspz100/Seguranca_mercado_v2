@@ -107,7 +107,7 @@ sinc/
 
 - [x] Validação manual com Docker: migration, auth flow completo (login → refresh com rotação → rejeição token antigo → logout → rejeição pós-logout), tudo OK com Postgres + Redis reais.
 - [ ] ADR-009: decidir login por email vs. username após reunião com os operadores do Kan.
-- [ ] Passo 6: smoke test de YOLO + ArcFace — scripts prontos (`scripts/download_models.sh` e `scripts/smoke_test.py`); requer vídeo de bancada e rodar `download_models.sh` primeiro.
+- [x] Passo 6: smoke test concluído (`scripts/smoke_test.py`, 300 frames, CPU, 15 fps). Baseline: YOLO 26 ms, YuNet 85 ms (gargalo), ArcFace 70 ms. Pipeline total ~111 ms → 9 fps em CPU. GPU estimada em 5–10× mais rápido — confirmar com specs do servidor Kan.
 - [ ] **Aguardando reunião com Kan** para destravar Fase 1 (especificações de servidor, lista de câmeras, watchlist real).
 
 ## Documentos de referência

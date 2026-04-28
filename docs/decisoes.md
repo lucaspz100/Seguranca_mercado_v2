@@ -153,4 +153,23 @@ Embeddings de não-match e frames de não-flaggados vivem em RAM por <1s e são 
 
 ---
 
+## ADR-010 — Estratégia de throughput para Camada 1 em CPU (baseline do smoke test)
+
+**Data:** 2026-04
+
+**Contexto:** Smoke test em CPU (sem GPU): YOLO 26 ms/frame, YuNet 85 ms/frame, ArcFace 70 ms/frame. Pipeline YOLO+YuNet = ~111 ms → 9 fps máx, abaixo dos 15 fps das câmeras de entrada. Resultado obtido com vídeo de bancada, 300 frames, MacOS.
+
+**Decisão:** Adotar duas mitigações antes de confirmar specs de GPU do Kan:
+
+1. **Processamento a 5 fps nas câmeras de entrada** (1 frame a cada 3): para detecção facial, 5 fps é suficiente — uma pessoa demora >1 s para atravessar o campo de visão. Implementado com `frame_skip=3` no `IngestWorker`.
+2. **GPU tem prioridade máxima para YuNet e ArcFace**: ao confirmar RTX 4060+ no servidor do Kan, YuNet + ArcFace via ONNX Runtime + CUDA devem rodar em <10 ms total.
+
+**Alternativas consideradas:**
+- TensorRT para YuNet (máxima performance, mas requer compilação por modelo de GPU — adiar para Fase 3).
+- Substituir YuNet por SCRFD (InsightFace nativo, já integrado com ArcFace) — considerar se YuNet continuar lento em GPU.
+
+**Consequências:** Com `frame_skip=3` em CPU, o pipeline fecha (~5 fps × 111 ms = 55% de utilização de 1 core). Sem GPU, cobertura de 300 câmeras é inviável — a reunião com Kan sobre specs do servidor é bloqueadora para Fase 1.
+
+---
+
 <!-- Adicionar novas decisões abaixo, mantendo o formato e a numeração -->
