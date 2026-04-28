@@ -137,4 +137,20 @@ Embeddings de não-match e frames de não-flaggados vivem em RAM por <1s e são 
 
 ---
 
+## ADR-009 — Login por email (campo `username` do OAuth2) mantido por padrão
+
+**Data:** 2026-04
+
+**Contexto:** O formulário OAuth2PasswordRequestForm usa o campo `username`. Operadores de supermercado tendem a preferir email (menos chance de esquecer) a um username inventado. A implementação atual já aceita email no campo `username`.
+
+**Decisão:** Manter login por email no campo `username` do formulário OAuth2. Nenhuma mudança no protocolo — só na semântica do campo.
+
+**Alternativas consideradas:**
+- Login por username puro (descartado: operadores esqueceriam o username, email é mais familiar).
+- Aceitar ambos email e username (adiado: complexidade desnecessária agora).
+
+**Consequências:** O campo `username` no formulário de login recebe um email. Pode confundir desenvolvedores novos — documentar no OpenAPI description do endpoint. Revisar com os operadores reais na reunião com o Kan antes de considerar mudança.
+
+---
+
 <!-- Adicionar novas decisões abaixo, mantendo o formato e a numeração -->

@@ -5,7 +5,7 @@ import structlog
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from sinc.api.routes import auth, health
+from sinc.api.routes import auth, health, users
 from sinc.config import get_settings
 
 logger = structlog.get_logger(__name__)
@@ -39,6 +39,7 @@ def create_app() -> FastAPI:
 
     app.include_router(health.router)
     app.include_router(auth.router, prefix="/api/v1")
+    app.include_router(users.router, prefix="/api/v1")
 
     return app
 

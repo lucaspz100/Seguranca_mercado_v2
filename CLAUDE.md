@@ -90,15 +90,25 @@ sinc/
 
 ## Estado atual do projeto
 
-**Fase 0 — Preparação.** Repositório vazio. Próximos passos:
+**Fase 0 — Concluída (passos 1–5).** O que está funcionando:
 
-1. Setup inicial (este pacote starter).
-2. Estrutura de diretórios + boilerplate FastAPI/SQLAlchemy/Alembic.
-3. Docker Compose para Postgres + Redis localmente.
-4. Schema inicial do banco (migration 0001) com `users`, `cameras`, `persons`, `alerts`, `audit_log`.
-5. Endpoint de auth + criação de admin via CLI.
-6. Smoke test de YOLO + ArcFace em vídeo gravado de bancada (sem câmera real ainda).
-7. **Aguardando reunião com Kan** para destravar Fase 1 (especificações de servidor, lista de câmeras, watchlist real).
+- Postgres 16 + Redis 7 via Docker Compose (`docker compose up -d`).
+- Migration `0001` aplicável via `alembic upgrade head` — cria 6 tabelas: `users`, `cameras`, `persons`, `person_embeddings`, `alerts`, `audit_log`.
+- API FastAPI com rotas:
+  - `GET /health` — verifica Postgres + Redis, sem auth.
+  - `POST /api/v1/auth/login` — JWT HS256, senha Argon2id, refresh token no Redis.
+  - `POST /api/v1/auth/refresh` — rotação de refresh token.
+  - `POST /api/v1/auth/logout` — revogação do refresh token.
+- CLI: `python -m sinc.cli create-admin --email ... --username ... --password ...`
+- 8 testes passando (`pytest tests/ -v`), com SQLite in-memory + httpx.AsyncClient.
+
+**Pendente antes de avançar para Fase 1:**
+
+- [ ] Validação manual do fluxo refresh/logout com Docker + Postgres real (Docker não estava ativo durante o desenvolvimento).
+- [ ] ADR-009: decidir login por email vs. username após reunião com os operadores do Kan.
+- [x] Endpoints de gerenciamento de usuários: `GET /api/v1/users` (MANAGER+), `POST /api/v1/users` (ADMIN), `PATCH /api/v1/users/{id}/deactivate` (ADMIN). 10 testes cobrindo RBAC e casos de erro.
+- [ ] Passo 6: smoke test de YOLO + ArcFace em vídeo gravado de bancada — requer `scripts/download_models.sh` e GPU/CPU adequada.
+- [ ] **Aguardando reunião com Kan** para destravar Fase 1 (especificações de servidor, lista de câmeras, watchlist real).
 
 ## Documentos de referência
 
